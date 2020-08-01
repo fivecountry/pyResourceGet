@@ -38,6 +38,8 @@ class FMainWindow(IWindowImplM):
         self.uiObj.btnStopAll.setEnabled(True)
         #创建下载目录
         try:
+            cfenv.configObj['downloadDir'] = os.path.join(QDir.homePath(), 'RDownloads')
+            cfenv.saveConfig()
             os.makedirs(cfenv.configObj['downloadDir'])
         except Exception as ex:
             pass
@@ -58,6 +60,7 @@ class FMainWindow(IWindowImplM):
         self.uiObj.btnStopAll.clicked.connect(self.btnStopAllClicked)
         self.uiObj.btnStartAll.clicked.connect(self.btnStartAllClicked)
         self.uiObj.btnAboutMe.clicked.connect(self.btnAboutMeClicked)
+        self.uiObj.btnDownloadDir.clicked.connect(self.btnDownloadDirClicked)
 
     '''
        返回UI定义类的实例(例如uiDefines/Ui_MainWindow.py的实例,抽象函数)
@@ -201,3 +204,9 @@ class FMainWindow(IWindowImplM):
     '''
     def btnAboutMeClicked(self, e):
         QMessageBox.information(self, '关于我', '资源搜索下载器 \n 本程序基于Python3.7 + PyQT + Scrapy + Js2py编写！')
+
+    '''
+        打开下载目录
+    '''
+    def btnDownloadDirClicked(self, e):
+        iotool.shellExecute('file://' + cfenv.configObj['downloadDir'] + '/')
