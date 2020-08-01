@@ -23,6 +23,7 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
        初始化所有数据(抽象函数)
     '''
     def initUIAndData(self):
+        self.windowObj.setFixedSize(937,658)
         #初始化事件
         self.initEvents()
         #初始化日志接口
@@ -58,10 +59,10 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         cursor = self.uiObj.txtLogs.textCursor()
         cursor.movePosition(QTextCursor.End)
         self.uiObj.txtLogs.setTextCursor(cursor)
-        try:
-            QApplication.processEvents()
-        except Exception as ex:
-            print(ex)
+        #try:
+        #    QApplication.processEvents()
+        #except Exception as ex:
+        #    print(ex)
 
     '''
         设置下载列表
@@ -75,10 +76,7 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
     def runUIImpl(self, uiArgs):
         try:
             if (uiArgs.command == 'log'):
-                self.displayLog(uiArgs.content)
-            elif (uiArgs.command == 'report'):
-                if (self.mainWIndow != None):
-                    self.downloadList.append(uiArgs.content)
+                self.displayLog(uiArgs.content)                
             else:
                 self.btnStopClicked(None)
         except Exception as ex:
@@ -94,7 +92,7 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         报告下载地址
     '''
     def reportDownloadUrl(self, url):
-        self.msgWorker.addMsg(QTCommandInvokeArgs('report', url, None))
+        self.downloadList.append(url)
 
     '''
         报告下载完成
@@ -107,16 +105,16 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
     '''
     def setPlugin(self, pluginInfo):
         self.currentPlugin = pluginInfo
-        self.uiObj.lblTitle.setText(self.currentPlugin['readme'])
         #生成基本目录
         self.downloadTotalDir = cfenv.configObj['downloadDir']
         print('下载总目录：' + self.downloadTotalDir)
-        self.downloadCurrentDir = os.path.join(self.downloadTotalDir, self.currentPlugin['dirName'],str(time.time()))
+        self.downloadCurrentDir = os.path.join(self.downloadTotalDir, self.currentPlugin['dirName'],str(int(time.time())))
         try:
             os.makedirs(self.downloadCurrentDir)
         except Exception as ex:
             pass
         print('本次下载目录：' + self.downloadCurrentDir)
+        self.uiObj.lblTitle.setText(self.currentPlugin['readme'] + '\n下载目录：' + self.downloadCurrentDir)
         #设置按钮状态
         self.uiObj.btnStart.setEnabled(True)
         self.uiObj.btnStop.setEnabled(False)
@@ -141,12 +139,12 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         self.uiObj.btnStart.setEnabled(True)
         self.uiObj.btnStop.setEnabled(False)
         self.uiObj.btnDownloadAll.setEnabled(True)
+        self.displayLog('总共找到{0}个可下载的链接！'.format(str(len(self.downloadList))))
 
     '''
         按钮下载所有
     '''
     def btnDownloadAllClicked(self, e):
-        self.displayLog('总共找到{0}个可下载的链接！'.format(str(len(self.downloadList))))
         self.uiObj.btnDownloadAll.setEnabled(False)
         FSplashWindow.showWindow("下载所有", SpiderSplashProcess(self.mainWIndow, self, self.downloadList))
 
