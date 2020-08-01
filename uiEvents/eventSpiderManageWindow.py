@@ -97,6 +97,7 @@ class FSpiderManageWindow(IWindowImplM):
             cfenv.configObj['plugins'].pop(self.currentItem['dirName'])
             self.initPluginData()
             self.clearData()
+            self.parentWindow.loadPluginList()
 
     '''
         按钮保存
@@ -116,3 +117,4 @@ class FSpiderManageWindow(IWindowImplM):
         cfenv.configObj['plugins'][self.currentItem['dirName']] = self.currentItem
         cfenv.saveConfig()
         self.initPluginData()
+        self.parentWindow.loadPluginList()

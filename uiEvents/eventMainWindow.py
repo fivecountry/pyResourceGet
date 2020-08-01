@@ -127,6 +127,7 @@ class FMainWindow(IWindowImplM):
         if cfenv.configObj.get('plugins') == None:
             pass
         else:
+            self.uiObj.cbPlugins.clear()
             pluginData = cfenv.configObj['plugins']
             for k, v in pluginData.items():
                 self.uiObj.cbPlugins.addItem(v['name'], v)
@@ -144,6 +145,7 @@ class FMainWindow(IWindowImplM):
     '''
     def btnManageClicked(self, e):
         window, ui, event = WindowBuilder.buildWindow(None, FSpiderManageWindow())
+        event.parentWindow = self
         window.show()
 
     '''
