@@ -275,3 +275,25 @@ class iotool(object):
             f.close()
         except IOError as e:
             print(e)
+
+    '''
+      追加文本
+    '''
+    def appendText(fPath,strContent):
+        try:
+            f = open(fPath,mode='a',encoding='utf-8')
+            f.write(strContent)
+            f.close()
+        except IOError as e:
+            print(e)
+
+    '''
+      追加字节
+    '''
+    def appendByte(fPath,byteContent):
+        try:
+            f = open(fPath,mode='ab')
+            f.write(byteContent)
+            f.close()
+        except IOError as e:
+            print(e)
