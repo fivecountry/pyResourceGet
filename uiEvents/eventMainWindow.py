@@ -45,6 +45,9 @@ class FMainWindow(IWindowImplM):
         self.loadDownloadList()
         #载入插件列表
         self.loadPluginList()
+        #启动Invoke消息投递线程
+        self.msgWorker = QTInvokeQueueWorker(self)
+        self.msgWorker.start()
 
     '''
         初始化事件

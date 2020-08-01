@@ -164,7 +164,7 @@ class SpiderSplashProcess(ISplashDoWork):
             #生成本地保存位置
             localPath = os.path.join(cfenv.configObj['downloadDir'], os.path.basename(urll))
             #添加下载
-            self.mainWIndow.invokeUI(QTCommandInvokeArgs('download', urll, localPath))
+            self.mainWIndow.msgWorker.addMsg(QTCommandInvokeArgs('download', urll, localPath))
             #打印日志
             print('url:{0},local:{1}'.format(urll,localPath))
             #显示进度为XX,内容为XX
