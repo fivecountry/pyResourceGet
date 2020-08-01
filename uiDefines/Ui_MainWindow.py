@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "资源搜索下载器V1.0 项目地址：https://github.com/wcss2010/pyDataDownloader"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "资源搜索下载器V1.0 项目地址：https://github.com/fivecountry/pyResourceGet"))
         self.gbToolBar.setTitle(_translate("MainWindow", "工具栏"))
         self.btnManage.setText(_translate("MainWindow", "管理"))
         self.btnOpenPlugin.setText(_translate("MainWindow", "打开插件"))

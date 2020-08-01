@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>资源搜索下载器V1.0 项目地址：https://github.com/wcss2010/pyDataDownloader</string>
+   <string>资源搜索下载器V1.0 项目地址：https://github.com/fivecountry/pyResourceGet</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="gbToolBar">
