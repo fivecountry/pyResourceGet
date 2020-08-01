@@ -89,5 +89,7 @@ class cfenv(object):
     def writeNewConfig():
         #初始化的例子
         cfenv.configObj['downloadDir'] = '~/PDownloaderDir'
+        cfenv.configObj['plugins'] = {}
+        cfenv.configObj['plugins']['testOne'] = {'name': '测试插件', 'dirName': 'testOne', 'readme': '这是一个测试插件'}
         #保存配置
         cfenv.saveConfig()

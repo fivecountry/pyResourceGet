@@ -5,91 +5,196 @@ from PyQt5.QtGui import *
 from PyQt5.QtNetwork import *
 from uiEvents.AWindowBase import *
 from uiDefines.Ui_MainWindow import *
-from uiEvents.eventSplashWindow import *
+from uiEvents.eventDownloadListItemWidget import *
+from uiEvents.eventSpiderWindow import *
+from uiEvents.eventSpiderManageWindow import *
+from uiUtil.downloadList import *
+from uiUtil.globaltool import *
+from uiUtil.envs import *
 import os
 import sys
 import pathlib
 import datetime
+import time
 
 '''
-    这是MainWindow窗体的实现类
+    这是MainWindow窗体的事件实现类
 '''
-#class FMainWindow(IWindowImpl):
 class FMainWindow(IWindowImplM):
     '''
        初始化所有数据(抽象函数)
     '''
     def initUIAndData(self):
+        #屏蔽最大化按钮
+        self.windowObj.setFixedSize(960, 570)
+        #清空下载列表
+        self.uiObj.lwFileList.clear()
+        #初始化事件
         self.initEvents()
-        self.msgWorker = QTInvokeQueueWorker(self)
-        self.msgWorker.start()
+        #启动下载器
+        self.dWorker = DownloadWorker()
+        self.dWorker.start()
+        self.uiObj.btnStartAll.setEnabled(False)
+        self.uiObj.btnStopAll.setEnabled(True)
+        #创建下载目录
+        try:
+            os.makedirs(cfenv.configObj['downloadDir'])
+        except Exception as ex:
+            pass
+        #载入下载列表
+        self.loadDownloadList()
+        #载入插件列表
+        self.loadPluginList()
 
     '''
         初始化事件
     '''
     def initEvents(self):
-        self.uiObj.btnTestA.clicked.connect(self.btnTestAClicked)
-        self.uiObj.btnTestB.clicked.connect(self.btnTestBClicked)
-        self.uiObj.btnTestC.clicked.connect(self.btnTestCClicked)
-        self.uiObj.btnTestD.clicked.connect(self.btnTestDClicked)
+        self.uiObj.btnManage.clicked.connect(self.btnManageClicked)
+        self.uiObj.btnOpenPlugin.clicked.connect(self.btnOpenPluginClicked)
+        self.uiObj.btnStopAll.clicked.connect(self.btnStopAllClicked)
+        self.uiObj.btnStartAll.clicked.connect(self.btnStartAllClicked)
+        self.uiObj.btnAboutMe.clicked.connect(self.btnAboutMeClicked)
 
     '''
        返回UI定义类的实例(例如uiDefines/Ui_MainWindow.py的实例,抽象函数)
     '''
     def getUIDefineObject(self):
         return Ui_MainWindow()
+    
+    '''
+        显示日志
+    '''
+    def displayLog(self, content):
+        oldContent =  self.uiObj.txtLogs.toPlainText()
+        oldContent = oldContent + datetime.datetime.now().__str__()+ ':' + content + '\n'
+        self.uiObj.txtLogs.setText(oldContent)
+        cursor = self.uiObj.txtLogs.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        self.uiObj.txtLogs.setTextCursor(cursor)
+        try:
+            QApplication.processEvents()
+        except Exception as ex:
+            print(ex)
 
     '''
-        InvokeUI的实现(用于跨线程操作UI内容)
+        Invoke实现
     '''
     def runUIImpl(self, uiArgs):
-        self.uiObj.txtContent.setText(uiArgs.content)
+        if uiArgs.command == 'log':
+            self.displayLog(uiArgs.content)
+        else:
+            self.addDownloadTask(uiArgs.content, uiArgs.tag, False)
 
     '''
-        按钮A
+        添加下载任务
     '''
-    def btnTestAClicked(self, e):
-        #显示SplashWindow窗体,SplashProcess为实现类
-        FSplashWindow.showWindow('aaaaa', SplashProcess())
+    def addDownloadTask(self, url, local, isFinished):
+        if url != None and local != None:
+            item = FDownloadListItemWidget()
+            item.dWorker = self.dWorker
+            item.appendToList(self.uiObj.lwFileList)
+            taskInfo = DownloadTaskInfo(url,local,item)
+            taskInfo.isFinished = isFinished
+            item.setText(item.getDisplayText())            
+            if (taskInfo.isFinished == False):
+                self.dWorker.addTask(taskInfo)
 
     '''
-        按钮B
+        载入下载列表
     '''
-    def btnTestBClicked(self, e):
-        if QMessageBox.question(self,"消息框标题","这是一条问答。",QMessageBox.Yes | QMessageBox.No) == QMessageBox.Yes:
-            self.invokeUI(QTObjectInvokeArgs("bbbbbbbbbbbbbbb"))
+    def loadDownloadList(self):
+        jd = jsondict()
+        jd.loadFile(cfenv.configFilePath)
+        downloadList = jd.getValue('downloadList',[])
+        if downloadList != None:
+            for kv in downloadList:
+                remoteUrl = kv['url']
+                localPath = kv['local']
+                isFinished = kv['finished']
+                self.addDownloadTask(remoteUrl,localPath,isFinished)
 
     '''
-        按钮C
+        载入插件列表
     '''
-    def btnTestCClicked(self, e):
-        self.msgWorker.addMsg(QTObjectInvokeArgs(datetime.datetime.now().__str__()))
+    def loadPluginList(self):
+        if cfenv.configObj.get('plugins') == None:
+            pass
+        else:
+            pluginData = cfenv.configObj['plugins']
+            for k, v in pluginData.items():
+                self.uiObj.cbPlugins.addItem(v['name'], v)
 
     '''
-        按钮D
+        窗体关闭事件
     '''
-    def btnTestDClicked(self, e):
-        iotool.shellExecute('file:///home/flyss/Downloads')
+    def closeEvent(self, e):
+        self.dWorker.isRunning = False
+        self.saveDownloadList()
+        e.accept()
 
-'''
-    SplashProcess为SplashWindow显示控制类
-'''
-class SplashProcess(ISplashDoWork):
-    def process(self):
-        #显示进度为10,内容为111111111111111111111111
-        self.eventObj.msgWorker.addMsg(SplashInvokeArgs(10, '111111111111111111111111'))
-        time.sleep(1)
-        #显示进度为30,内容为222222222222222222222222
-        self.eventObj.msgWorker.addMsg(SplashInvokeArgs(30, '222222222222222222222222'))
-        time.sleep(1)
-        #显示进度为60,内容为333333333333333333333333
-        self.eventObj.msgWorker.addMsg(SplashInvokeArgs(60, '333333333333333333333333'))
-        time.sleep(1)
-        #显示进度为80,内容为444444444444444444444444
-        self.eventObj.msgWorker.addMsg(SplashInvokeArgs(80, '444444444444444444444444'))
-        time.sleep(1)
-        #显示进度为100,内容为555555555555555555555555
-        self.eventObj.msgWorker.addMsg(SplashInvokeArgs(100, '555555555555555555555555'))
-        time.sleep(1)
-        #关闭窗体
-        self.windowObj.close()
+    '''
+        管理
+    '''
+    def btnManageClicked(self, e):
+        window, ui, event = WindowBuilder.buildWindow(None, FSpiderManageWindow())
+        window.show()
+
+    '''
+        打开分析界面
+    '''
+    def btnOpenPluginClicked(self, e):
+        window, ui, event = WindowBuilder.buildWindow(None, FSpiderWindow())
+        event.setDownloadList(self)
+        event.setPlugin(self.uiObj.cbPlugins.currentData())
+        window.show()
+
+    '''
+        停止所有
+    '''
+    def btnStopAllClicked(self, e):
+        #关闭线程
+        self.tempQueue = self.dWorker.queue
+        self.dWorker.isRunning = False
+        self.uiObj.btnStartAll.setEnabled(True)
+        self.uiObj.btnStopAll.setEnabled(False)
+        #保存任务列表
+        self.saveDownloadList()
+
+    '''
+        保存下载任务列表
+    '''
+    def saveDownloadList(self):
+        try:
+            jd = jsondict()
+            jd.loadFile(cfenv.configFilePath)
+            downloadList = []
+            for k in range(0,self.uiObj.lwFileList.count()):
+                item = self.uiObj.lwFileList.item(k)
+                eventObj = item.data(0)
+                kvv = {}
+                kvv['url'] = eventObj.taskInfo.sourceUrl
+                kvv['local'] = eventObj.taskInfo.localPath
+                kvv['finished'] = eventObj.taskInfo.isFinished
+                downloadList.append(kvv)
+            jd.addOrUpdate('downloadList',downloadList)
+            jd.saveFile(cfenv.configFilePath)
+        except Exception as ex:
+            pass
+
+    '''
+        开始所有
+    '''
+    def btnStartAllClicked(self, e):
+        #启动线程
+        self.dWorker = DownloadWorker()
+        self.dWorker.queue = self.tempQueue
+        self.dWorker.start()
+        self.uiObj.btnStartAll.setEnabled(False)
+        self.uiObj.btnStopAll.setEnabled(True)
+
+    '''
+        关于我
+    '''
+    def btnAboutMeClicked(self, e):
+        QMessageBox.information(self, '关于我', '资源搜索下载器 \n 本程序基于Python3.7 + PyQT + Scrapy + Js2py编写！')
