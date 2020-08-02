@@ -62,6 +62,7 @@ class FMainWindow(IWindowImplM):
         self.uiObj.btnStartAll.clicked.connect(self.btnStartAllClicked)
         self.uiObj.btnAboutMe.clicked.connect(self.btnAboutMeClicked)
         self.uiObj.btnDownloadDir.clicked.connect(self.btnDownloadDirClicked)
+        self.uiObj.btnPluginDir.clicked.connect(self.btnPluginDirClicked)
 
     '''
        返回UI定义类的实例(例如uiDefines/Ui_MainWindow.py的实例,抽象函数)
@@ -215,3 +216,9 @@ class FMainWindow(IWindowImplM):
     '''
     def btnDownloadDirClicked(self, e):
         iotool.shellExecute('file://' + cfenv.configObj['downloadDir'] + '/')
+
+    '''
+        打开插件目录
+    '''
+    def btnPluginDirClicked(self, e):
+        iotool.shellExecute('file://' + cfenv.pluginDir + '/')
