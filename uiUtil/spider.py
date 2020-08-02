@@ -116,25 +116,26 @@ class spidertool:
         创建蜘蛛进程
     '''
     def createSpiderProcess(scriptPluginDir):
-        def f(q):
-            try:
-                runner = crawler.CrawlerRunner()
-                deferred = runner.crawl(jsSpider)
-                deferred.addBoth(lambda _: reactor.stop())
-                reactor.run()
-                q.put(None)
-                print('jsSpider启动完成')
-            except Exception as e:
-                print(e)
-                q.put(e)
         #载入脚本
         jsSpider.urlCode = iotool.readAllText(os.path.join(scriptPluginDir, 'url.js'))
         jsSpider.resolveCode = iotool.readAllText(os.path.join(scriptPluginDir, 'spider.js'))
-        print('Url脚本：' + jsSpider.urlCode)
-        print('Spider脚本：' + jsSpider.resolveCode)
+        print('Url脚本：{0}\n'.format(jsSpider.urlCode))
+        print('Spider脚本：{0}\n'.format(jsSpider.resolveCode))
+
+        def spiderStart(q):
+            try:
+                runner = CrawlerRunner()
+                runner.crawl(jsSpider)
+                d = runner.join()
+                d.addBoth(lambda _: reactor.stop())
+                reactor.callFromThread(notThreadSafe, 3)
+                reactor.run()
+                print('jsSpider已启动!')
+            except Exception as e:
+                print(e)
+        
         #运行蜘蛛程序
-        q = Queue()
-        return Process(target=f, args=(q,))
+        return Process(target=spiderStart, args=(None))
 
     '''
         使用Xpath方式解析数据
