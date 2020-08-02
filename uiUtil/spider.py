@@ -3,14 +3,60 @@ import sys
 import os
 import pathlib
 import js2py
-from twisted.internet import reactor
+import twisted
+from twisted.internet import *
 import scrapy.crawler as crawler
 import scrapy
-from scrapy.crawler import CrawlerRunner
-from multiprocessing import Process, Queue
-from scrapy.utils.log import configure_logging
+from scrapy.crawler import *
+from multiprocessing import *
+from scrapy.utils.log import *
 from uiUtil.globaltool import *
 import json
+import scrapy.spiderloader
+import scrapy.statscollectors
+import scrapy.logformatter
+import scrapy.dupefilters
+import scrapy.squeues
+import scrapy.extensions.spiderstate
+import scrapy.extensions.corestats
+import scrapy.extensions.telnet
+import scrapy.extensions.logstats
+import scrapy.extensions.memusage
+import scrapy.extensions.memdebug
+import scrapy.extensions.feedexport
+import scrapy.extensions.closespider
+import scrapy.extensions.debug
+import scrapy.extensions.httpcache
+import scrapy.extensions.statsmailer
+import scrapy.extensions.throttle
+import scrapy.core.scheduler
+import scrapy.core.engine
+import scrapy.core.scraper
+import scrapy.core.spidermw
+import scrapy.core.downloader
+import scrapy.downloadermiddlewares.stats
+import scrapy.downloadermiddlewares.httpcache
+import scrapy.downloadermiddlewares.cookies
+import scrapy.downloadermiddlewares.useragent
+import scrapy.downloadermiddlewares.httpproxy
+import scrapy.downloadermiddlewares.ajaxcrawl
+import scrapy.downloadermiddlewares.decompression
+import scrapy.downloadermiddlewares.defaultheaders
+import scrapy.downloadermiddlewares.downloadtimeout
+import scrapy.downloadermiddlewares.httpauth
+import scrapy.downloadermiddlewares.httpcompression
+import scrapy.downloadermiddlewares.redirect
+import scrapy.downloadermiddlewares.retry
+import scrapy.downloadermiddlewares.robotstxt
+import scrapy.spidermiddlewares.depth
+import scrapy.spidermiddlewares.httperror
+import scrapy.spidermiddlewares.offsite
+import scrapy.spidermiddlewares.referer
+import scrapy.spidermiddlewares.urllength
+import scrapy.pipelines
+import scrapy.core.downloader.handlers.http
+import scrapy.core.downloader.contextfactory
+import twisted
 
 '''
     使用JS代码实现蜘蛛程序
@@ -77,11 +123,15 @@ class spidertool:
                 deferred.addBoth(lambda _: reactor.stop())
                 reactor.run()
                 q.put(None)
+                print('jsSpider启动完成')
             except Exception as e:
+                print(e)
                 q.put(e)
         #载入脚本
         jsSpider.urlCode = iotool.readAllText(os.path.join(scriptPluginDir, 'url.js'))
         jsSpider.resolveCode = iotool.readAllText(os.path.join(scriptPluginDir, 'spider.js'))
+        print('Url脚本：' + jsSpider.urlCode)
+        print('Spider脚本：' + jsSpider.resolveCode)
         #运行蜘蛛程序
         q = Queue()
         return Process(target=f, args=(q,))
