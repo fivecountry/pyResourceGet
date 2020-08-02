@@ -76,7 +76,13 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
     def runUIImpl(self, uiArgs):
         try:
             if (uiArgs.command == 'log'):
-                self.displayLog(uiArgs.content)                
+                self.displayLog(uiArgs.content)
+            elif (uiArgs.command == 'download'):
+                if isinstance(uiArgs.content,str):
+                    self.downloadList.append(uiArgs.content)
+                else:
+                    for s in uiArgs.content:
+                        self.downloadList.append(s)
             else:
                 self.btnStopClicked(None)
         except Exception as ex:
@@ -92,7 +98,14 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         报告下载地址
     '''
     def reportDownloadUrl(self, url):
-        self.downloadList.append(url)
+        reportObj = None
+        if isinstance(url, str):
+            reportObj = url
+        else:
+            reportObj = []
+            for s in url:
+                reportObj.append(s)
+        self.msgWorker.addMsg(QTCommandInvokeArgs('download',reportObj,None))
 
     '''
         报告下载完成
