@@ -43,6 +43,7 @@ class FMainWindow(IWindowImplM):
             os.makedirs(cfenv.configObj['downloadDir'])
         except Exception as ex:
             pass
+        self.displayLog('下载目录为' + cfenv.configObj['downloadDir'])
         #载入下载列表
         self.loadDownloadList()
         #载入插件列表
@@ -78,10 +79,10 @@ class FMainWindow(IWindowImplM):
         cursor = self.uiObj.txtLogs.textCursor()
         cursor.movePosition(QTextCursor.End)
         self.uiObj.txtLogs.setTextCursor(cursor)
-        try:
-            QApplication.processEvents()
-        except Exception as ex:
-            print(ex)
+        #try:
+        #    QApplication.processEvents()
+        #except Exception as ex:
+        #    print(ex)
 
     '''
         Invoke实现
@@ -168,6 +169,7 @@ class FMainWindow(IWindowImplM):
         self.uiObj.btnStopAll.setEnabled(False)
         #保存任务列表
         self.saveDownloadList()
+        self.displayLog("下载服务已停止")
 
     '''
         保存下载任务列表
@@ -200,6 +202,7 @@ class FMainWindow(IWindowImplM):
         self.dWorker.start()
         self.uiObj.btnStartAll.setEnabled(False)
         self.uiObj.btnStopAll.setEnabled(True)
+        self.displayLog("下载服务已启动")
 
     '''
         关于我

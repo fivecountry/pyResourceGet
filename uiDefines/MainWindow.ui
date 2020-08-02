@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>工具栏</string>
+     <string>控制栏</string>
     </property>
     <widget class="QPushButton" name="btnManage">
      <property name="geometry">
