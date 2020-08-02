@@ -4,10 +4,10 @@ import os
 import pathlib
 import js2py
 import twisted
-from twisted.internet import *
+from twisted.internet import reactor
 import scrapy.crawler as crawler
 import scrapy
-from scrapy.crawler import *
+from scrapy.crawler import CrawlerRunner
 from multiprocessing import *
 from scrapy.utils.log import *
 from uiUtil.globaltool import *
@@ -57,6 +57,8 @@ import scrapy.pipelines
 import scrapy.core.downloader.handlers.http
 import scrapy.core.downloader.contextfactory
 import twisted
+import twisted.internet
+import scrapy.crawler
 
 '''
     使用JS代码实现蜘蛛程序
@@ -122,7 +124,11 @@ class spidertool:
         print('Url脚本：{0}\n'.format(jsSpider.urlCode))
         print('Spider脚本：{0}\n'.format(jsSpider.resolveCode))
 
-        def spiderStart(q):
+        def notThreadSafe(x):
+            """do something that isn't thread-safe"""
+            # ...
+
+        def spiderStart():
             try:
                 runner = CrawlerRunner()
                 runner.crawl(jsSpider)
@@ -135,7 +141,7 @@ class spidertool:
                 print(e)
         
         #运行蜘蛛程序
-        return Process(target=spiderStart, args=(None))
+        return Process(target=spiderStart)
 
     '''
         使用Xpath方式解析数据
