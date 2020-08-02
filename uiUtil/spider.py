@@ -4,10 +4,10 @@ import os
 import pathlib
 import js2py
 import twisted
-from twisted.internet import reactor
+from twisted.internet import *
 import scrapy.crawler as crawler
 import scrapy
-from scrapy.crawler import CrawlerRunner
+from scrapy.crawler import *
 from multiprocessing import *
 from scrapy.utils.log import *
 from uiUtil.globaltool import *
@@ -123,19 +123,12 @@ class spidertool:
         jsSpider.resolveCode = iotool.readAllText(os.path.join(scriptPluginDir, 'spider.js'))
         print('Url脚本：{0}\n'.format(jsSpider.urlCode))
         print('Spider脚本：{0}\n'.format(jsSpider.resolveCode))
-
-        def notThreadSafe(x):
-            """do something that isn't thread-safe"""
-            # ...
-
+        
         def spiderStart():
             try:
-                runner = CrawlerRunner()
-                runner.crawl(jsSpider)
-                d = runner.join()
-                d.addBoth(lambda _: reactor.stop())
-                reactor.callFromThread(notThreadSafe, 3)
-                reactor.run()
+                process = CrawlerProcess()
+                process.crawl(jsSpider)
+                process.start()
                 print('jsSpider已启动!')
             except Exception as e:
                 print(e)
