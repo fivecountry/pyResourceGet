@@ -121,11 +121,7 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         #生成基本目录
         self.downloadTotalDir = cfenv.configObj['downloadDir']
         print('下载总目录：' + self.downloadTotalDir)
-        self.downloadCurrentDir = os.path.join(self.downloadTotalDir, self.currentPlugin['dirName'],str(int(time.time())))
-        try:
-            os.makedirs(self.downloadCurrentDir)
-        except Exception as ex:
-            pass
+        self.downloadCurrentDir = os.path.join(self.downloadTotalDir, self.currentPlugin['dirName'], datetime.datetime.now().strftime("%Y%m%dT%H%M%S"))
         print('本次下载目录：' + self.downloadCurrentDir)
         self.uiObj.lblTitle.setText(self.currentPlugin['readme'] + '\n下载目录：' + self.downloadCurrentDir)
         #设置按钮状态
@@ -158,6 +154,10 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         按钮下载所有
     '''
     def btnDownloadAllClicked(self, e):
+        try:
+            os.makedirs(self.downloadCurrentDir)
+        except Exception as ex:
+            pass
         self.uiObj.btnDownloadAll.setEnabled(False)
         FSplashWindow.showWindow("下载所有", SpiderSplashProcess(self.mainWIndow, self, self.downloadList))
 
