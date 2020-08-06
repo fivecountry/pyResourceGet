@@ -9,6 +9,62 @@ import os
 import sys
 import pathlib
 import datetime
+import twisted
+from twisted.internet import *
+import scrapy.crawler as crawler
+import scrapy
+from scrapy.crawler import *
+from multiprocessing import *
+from scrapy.utils.log import *
+from uiUtil.globaltool import *
+import json
+import scrapy.spiderloader
+import scrapy.statscollectors
+import scrapy.logformatter
+import scrapy.dupefilters
+import scrapy.squeues
+import scrapy.extensions.spiderstate
+import scrapy.extensions.corestats
+import scrapy.extensions.telnet
+import scrapy.extensions.logstats
+import scrapy.extensions.memusage
+import scrapy.extensions.memdebug
+import scrapy.extensions.feedexport
+import scrapy.extensions.closespider
+import scrapy.extensions.debug
+import scrapy.extensions.httpcache
+import scrapy.extensions.statsmailer
+import scrapy.extensions.throttle
+import scrapy.core.scheduler
+import scrapy.core.engine
+import scrapy.core.scraper
+import scrapy.core.spidermw
+import scrapy.core.downloader
+import scrapy.downloadermiddlewares.stats
+import scrapy.downloadermiddlewares.httpcache
+import scrapy.downloadermiddlewares.cookies
+import scrapy.downloadermiddlewares.useragent
+import scrapy.downloadermiddlewares.httpproxy
+import scrapy.downloadermiddlewares.ajaxcrawl
+import scrapy.downloadermiddlewares.decompression
+import scrapy.downloadermiddlewares.defaultheaders
+import scrapy.downloadermiddlewares.downloadtimeout
+import scrapy.downloadermiddlewares.httpauth
+import scrapy.downloadermiddlewares.httpcompression
+import scrapy.downloadermiddlewares.redirect
+import scrapy.downloadermiddlewares.retry
+import scrapy.downloadermiddlewares.robotstxt
+import scrapy.spidermiddlewares.depth
+import scrapy.spidermiddlewares.httperror
+import scrapy.spidermiddlewares.offsite
+import scrapy.spidermiddlewares.referer
+import scrapy.spidermiddlewares.urllength
+import scrapy.pipelines
+import scrapy.core.downloader.handlers.http
+import scrapy.core.downloader.contextfactory
+import twisted
+import twisted.internet
+import scrapy.crawler
 
 '''
     这是SpiderDebugWindow窗体的实现类
@@ -53,10 +109,52 @@ class FSpiderDebugWindow(IWindowImplM):
         InvokeUI的实现(用于跨线程操作UI内容)
     '''
     def runUIImpl(self, uiArgs):
-        pass
+        self.uiObj.btnTest.setEnabled(True)
+        self.displayLog(uiArgs.content)
 
     '''
         按钮测试
     '''
     def btnTestClicked(self, e):
-        pass
+        TestSpider.windowObj = self
+        TestSpider.rootUrl = self.uiObj.txtUrl.text()
+        TestSpider.xpathText = self.uiObj.txtXPathText.toPlainText()
+        self.uiObj.btnTest.setEnabled(False)
+        def spiderStart():
+            try:
+                process = CrawlerProcess()
+                process.crawl(TestSpider)
+                process.start()
+                print('testSpider已启动!')
+            except Exception as e:
+                print(e)
+        
+        #运行蜘蛛程序
+        p = Process(target=spiderStart)
+        p.start()
+
+class TestSpider(scrapy.Spider):
+    #Spider名称
+    name = 'testSpider'
+
+    def __init__(self, name=None, **kwargs):
+        super().__init__(name=name, **kwargs)
+        #初始化地址
+        try:
+            self.start_urls = []
+            self.start_urls.append(FSpiderDebugWindow.rootUrl)
+            if len(self.start_urls) >= 1:
+                print('URL:' + self.start_urls[0])
+        except Exception  as ex:
+            print(ex)
+
+    '''
+        XPath解析
+    '''
+    def parse(self, response):
+        try:
+            result = response.xpath(FSpiderDebugWindow.xpathText).extract()
+            for s in result:
+                TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, s, None))
+        except Exception as ex:
+            print(ex)
