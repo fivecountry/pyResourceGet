@@ -39,7 +39,7 @@
       <string>http://***</string>
      </property>
     </widget>
-    <widget class="QTextEdit" name="btnXPathText">
+    <widget class="QTextEdit" name="txtXPathText">
      <property name="geometry">
       <rect>
        <x>10</x>

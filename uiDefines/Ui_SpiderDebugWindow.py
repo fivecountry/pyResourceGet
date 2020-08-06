@@ -22,9 +22,9 @@ class Ui_SpiderDebugWindow(object):
         self.txtUrl = QtWidgets.QLineEdit(self.groupBox)
         self.txtUrl.setGeometry(QtCore.QRect(10, 30, 851, 27))
         self.txtUrl.setObjectName("txtUrl")
-        self.btnXPathText = QtWidgets.QTextEdit(self.groupBox)
-        self.btnXPathText.setGeometry(QtCore.QRect(10, 60, 771, 81))
-        self.btnXPathText.setObjectName("btnXPathText")
+        self.txtXPathText = QtWidgets.QTextEdit(self.groupBox)
+        self.txtXPathText.setGeometry(QtCore.QRect(10, 60, 771, 81))
+        self.txtXPathText.setObjectName("txtXPathText")
         self.btnTest = QtWidgets.QPushButton(self.groupBox)
         self.btnTest.setGeometry(QtCore.QRect(790, 60, 71, 81))
         self.btnTest.setObjectName("btnTest")
@@ -42,7 +42,7 @@ class Ui_SpiderDebugWindow(object):
         SpiderDebugWindow.setWindowTitle(_translate("SpiderDebugWindow", "XPath测试"))
         self.groupBox.setTitle(_translate("SpiderDebugWindow", "工具栏"))
         self.txtUrl.setText(_translate("SpiderDebugWindow", "http://***"))
-        self.btnXPathText.setHtml(_translate("SpiderDebugWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.txtXPathText.setHtml(_translate("SpiderDebugWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'文泉驿等宽微米黑\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
