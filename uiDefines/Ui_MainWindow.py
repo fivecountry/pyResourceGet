@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/flyss/myData/myCode/pythonWorkSpace/pyDownloader/pyResourceGet/uiDefines/MainWindow.ui'
+# Form implementation generated from reading ui file '/home/flywcs/myData/myCode/pythonApp-workspace/pyResourceGet/uiDefines/MainWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
-        MainWindow.resize(959, 570)
+        MainWindow.resize(1059, 570)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gbToolBar = QtWidgets.QGroupBox(self.centralwidget)
-        self.gbToolBar.setGeometry(QtCore.QRect(10, 10, 940, 70))
+        self.gbToolBar.setGeometry(QtCore.QRect(10, 10, 1041, 70))
         self.gbToolBar.setObjectName("gbToolBar")
         self.btnManage = QtWidgets.QPushButton(self.gbToolBar)
         self.btnManage.setGeometry(QtCore.QRect(390, 30, 61, 30))
@@ -34,7 +36,7 @@ class Ui_MainWindow(object):
         self.btnStartAll.setGeometry(QtCore.QRect(770, 30, 81, 30))
         self.btnStartAll.setObjectName("btnStartAll")
         self.btnAboutMe = QtWidgets.QPushButton(self.gbToolBar)
-        self.btnAboutMe.setGeometry(QtCore.QRect(860, 30, 71, 27))
+        self.btnAboutMe.setGeometry(QtCore.QRect(960, 30, 71, 30))
         self.btnAboutMe.setObjectName("btnAboutMe")
         self.btnDownloadDir = QtWidgets.QPushButton(self.gbToolBar)
         self.btnDownloadDir.setGeometry(QtCore.QRect(569, 30, 101, 31))
@@ -42,8 +44,11 @@ class Ui_MainWindow(object):
         self.btnPluginDir = QtWidgets.QPushButton(self.gbToolBar)
         self.btnPluginDir.setGeometry(QtCore.QRect(460, 30, 101, 31))
         self.btnPluginDir.setObjectName("btnPluginDir")
+        self.btnXPathDebug = QtWidgets.QPushButton(self.gbToolBar)
+        self.btnXPathDebug.setGeometry(QtCore.QRect(860, 30, 90, 30))
+        self.btnXPathDebug.setObjectName("btnXPathDebug")
         self.lwFileList = QtWidgets.QListWidget(self.centralwidget)
-        self.lwFileList.setGeometry(QtCore.QRect(10, 90, 941, 381))
+        self.lwFileList.setGeometry(QtCore.QRect(10, 90, 1041, 381))
         self.lwFileList.setObjectName("lwFileList")
         item = QtWidgets.QListWidgetItem()
         self.lwFileList.addItem(item)
@@ -54,7 +59,7 @@ class Ui_MainWindow(object):
         item = QtWidgets.QListWidgetItem()
         self.lwFileList.addItem(item)
         self.txtLogs = QtWidgets.QTextEdit(self.centralwidget)
-        self.txtLogs.setGeometry(QtCore.QRect(10, 480, 941, 81))
+        self.txtLogs.setGeometry(QtCore.QRect(10, 480, 1041, 81))
         self.txtLogs.setReadOnly(True)
         self.txtLogs.setObjectName("txtLogs")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -73,6 +78,7 @@ class Ui_MainWindow(object):
         self.btnAboutMe.setText(_translate("MainWindow", "关于我"))
         self.btnDownloadDir.setText(_translate("MainWindow", "打开下载目录"))
         self.btnPluginDir.setText(_translate("MainWindow", "打开插件目录"))
+        self.btnXPathDebug.setText(_translate("MainWindow", "xpath调试"))
         __sortingEnabled = self.lwFileList.isSortingEnabled()
         self.lwFileList.setSortingEnabled(False)
         item = self.lwFileList.item(0)
@@ -84,4 +90,3 @@ class Ui_MainWindow(object):
         item = self.lwFileList.item(3)
         item.setText(_translate("MainWindow", "新建项目"))
         self.lwFileList.setSortingEnabled(__sortingEnabled)
-

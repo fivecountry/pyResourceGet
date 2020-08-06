@@ -8,6 +8,7 @@ from uiDefines.Ui_MainWindow import *
 from uiEvents.eventDownloadListItemWidget import *
 from uiEvents.eventSpiderWindow import *
 from uiEvents.eventSpiderManageWindow import *
+from uiEvents.eventSpiderDebugWindow import *
 from uiUtil.downloadList import *
 from uiUtil.globaltool import *
 from uiUtil.envs import *
@@ -26,7 +27,7 @@ class FMainWindow(IWindowImplM):
     '''
     def initUIAndData(self):
         #屏蔽最大化按钮
-        self.windowObj.setFixedSize(960, 570)
+        self.windowObj.setFixedSize(1059, 570)
         #清空下载列表
         self.uiObj.lwFileList.clear()
         #初始化事件
@@ -63,6 +64,7 @@ class FMainWindow(IWindowImplM):
         self.uiObj.btnAboutMe.clicked.connect(self.btnAboutMeClicked)
         self.uiObj.btnDownloadDir.clicked.connect(self.btnDownloadDirClicked)
         self.uiObj.btnPluginDir.clicked.connect(self.btnPluginDirClicked)
+        self.uiObj.btnXPathDebug.clicked.connect(self.btnXPathDebugClicked)
 
     '''
        返回UI定义类的实例(例如uiDefines/Ui_MainWindow.py的实例,抽象函数)
@@ -222,3 +224,10 @@ class FMainWindow(IWindowImplM):
     '''
     def btnPluginDirClicked(self, e):
         iotool.shellExecute('file://' + cfenv.pluginDir + '/')
+
+    '''
+        打开XPath调试
+    '''
+    def btnXPathDebugClicked(self, e):
+        window, ui, event = WindowBuilder.buildWindow(None, FSpiderDebugWindow())
+        window.show()

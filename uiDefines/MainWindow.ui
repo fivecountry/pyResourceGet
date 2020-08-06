@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>959</width>
+    <width>1059</width>
     <height>570</height>
    </rect>
   </property>
@@ -22,7 +22,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>940</width>
+      <width>1041</width>
       <height>70</height>
      </rect>
     </property>
@@ -94,10 +94,10 @@
     <widget class="QPushButton" name="btnAboutMe">
      <property name="geometry">
       <rect>
-       <x>860</x>
+       <x>960</x>
        <y>30</y>
        <width>71</width>
-       <height>27</height>
+       <height>30</height>
       </rect>
      </property>
      <property name="text">
@@ -130,13 +130,26 @@
       <string>打开插件目录</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="btnXPathDebug">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>30</y>
+       <width>90</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>xpath调试</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QListWidget" name="lwFileList">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>941</width>
+      <width>1041</width>
       <height>381</height>
      </rect>
     </property>
@@ -166,7 +179,7 @@
      <rect>
       <x>10</x>
       <y>480</y>
-      <width>941</width>
+      <width>1041</width>
       <height>81</height>
      </rect>
     </property>
