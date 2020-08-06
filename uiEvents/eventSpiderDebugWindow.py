@@ -116,6 +116,8 @@ class FSpiderDebugWindow(IWindowImplM):
         按钮测试
     '''
     def btnTestClicked(self, e):
+        self.uiObj.txtLogs.setText('')
+        self.displayLog('正在准备数据...')
         TestSpider.windowObj = self
         TestSpider.rootUrl = self.uiObj.txtUrl.text()
         TestSpider.xpathText = self.uiObj.txtXPathText.toPlainText()
@@ -124,10 +126,11 @@ class FSpiderDebugWindow(IWindowImplM):
             try:
                 process = CrawlerProcess()
                 process.crawl(TestSpider)
+                TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, '数据抓取测试开始...', None))
                 process.start()
-                print('testSpider已启动!')
+                print('testSpider已启动!')                
             except Exception as e:
-                print(e)
+                TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, str(e), None))
         
         #运行蜘蛛程序
         p = Process(target=spiderStart)
@@ -142,7 +145,7 @@ class TestSpider(scrapy.Spider):
         #初始化地址
         try:
             self.start_urls = []
-            self.start_urls.append(FSpiderDebugWindow.rootUrl)
+            self.start_urls.append(TestSpider.rootUrl)
             if len(self.start_urls) >= 1:
                 print('URL:' + self.start_urls[0])
         except Exception  as ex:
@@ -153,8 +156,9 @@ class TestSpider(scrapy.Spider):
     '''
     def parse(self, response):
         try:
-            result = response.xpath(FSpiderDebugWindow.xpathText).extract()
+            result = response.xpath(TestSpider.xpathText).extract()
             for s in result:
                 TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, s, None))
+            TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, '数据抓取完成！', None))
         except Exception as ex:
-            print(ex)
+            TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, str(ex), None))
