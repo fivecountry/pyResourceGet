@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/flywcs/myData/myCode/pythonApp-workspace/pyResourceGet/uiDefines/SpiderDebugWindow.ui'
+# Form implementation generated from reading ui file '/home/flyss/myData/myCode/pythonWorkSpace/pyDownloader/pyResourceGet/uiDefines/SpiderDebugWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_SpiderDebugWindow(object):
     def setupUi(self, SpiderDebugWindow):
@@ -39,12 +37,13 @@ class Ui_SpiderDebugWindow(object):
 
     def retranslateUi(self, SpiderDebugWindow):
         _translate = QtCore.QCoreApplication.translate
-        SpiderDebugWindow.setWindowTitle(_translate("SpiderDebugWindow", "XPath测试"))
+        SpiderDebugWindow.setWindowTitle(_translate("SpiderDebugWindow", "XPath调试"))
         self.groupBox.setTitle(_translate("SpiderDebugWindow", "工具栏"))
         self.txtUrl.setText(_translate("SpiderDebugWindow", "http://***"))
         self.txtXPathText.setHtml(_translate("SpiderDebugWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'文泉驿等宽微米黑\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">//div[contains(@name,&quot;&quot;]***************</p></body></html>"))
+"</style></head><body style=\" font-family:\'Noto Sans CJK SC\'; font-size:10.5pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'文泉驿等宽微米黑\'; font-size:11pt;\">//div[contains(@name,&quot;&quot;]***************</span></p></body></html>"))
         self.btnTest.setText(_translate("SpiderDebugWindow", "测试"))
+
