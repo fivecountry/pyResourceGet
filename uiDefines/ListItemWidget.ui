@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>941</width>
+    <width>1040</width>
     <height>89</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>731</width>
+     <width>740</width>
      <height>71</height>
     </rect>
    </property>
@@ -34,9 +34,9 @@
   <widget class="QPushButton" name="btnDelete">
    <property name="geometry">
     <rect>
-     <x>840</x>
+     <x>970</x>
      <y>20</y>
-     <width>81</width>
+     <width>60</width>
      <height>51</height>
     </rect>
    </property>
@@ -47,14 +47,43 @@
   <widget class="QPushButton" name="btnOpen">
    <property name="geometry">
     <rect>
-     <x>750</x>
+     <x>760</x>
      <y>20</y>
-     <width>81</width>
+     <width>60</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>重新下载</string>
+    <string>重新
+下载</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnOpenDir">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>20</y>
+     <width>60</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>打开
+目录</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnOpenFile">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>20</y>
+     <width>60</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>打开
+文件</string>
    </property>
   </widget>
  </widget>

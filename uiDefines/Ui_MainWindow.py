@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/flywcs/myData/myCode/pythonApp-workspace/pyResourceGet/uiDefines/MainWindow.ui'
+# Form implementation generated from reading ui file '/home/flyss/myData/myCode/pythonWorkSpace/pyDownloader/pyResourceGet/uiDefines/MainWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -69,7 +67,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "资源搜索下载器V1.2 项目地址：https://github.com/fivecountry/pyResourceGet"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "资源搜索下载器V1.3 项目地址：https://github.com/fivecountry/pyResourceGet"))
         self.gbToolBar.setTitle(_translate("MainWindow", "控制栏"))
         self.btnManage.setText(_translate("MainWindow", "管理"))
         self.btnOpenPlugin.setText(_translate("MainWindow", "打开插件"))
@@ -90,3 +88,4 @@ class Ui_MainWindow(object):
         item = self.lwFileList.item(3)
         item.setText(_translate("MainWindow", "新建项目"))
         self.lwFileList.setSortingEnabled(__sortingEnabled)
+
