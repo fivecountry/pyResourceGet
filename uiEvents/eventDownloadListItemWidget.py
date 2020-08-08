@@ -66,7 +66,7 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
     '''
     def btnOpenDirClicked(self, e):
         try:
-            iotool.shellExecute(pathlib.Path(self.taskInfo.localPath).parent)
+            iotool.shellExecute(str(pathlib.Path(self.taskInfo.localPath).parent) + '/')
         except Exception as ex:
             pass
 
