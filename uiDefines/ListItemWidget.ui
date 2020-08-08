@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>740</width>
+     <width>720</width>
      <height>71</height>
     </rect>
    </property>
@@ -34,7 +34,7 @@
   <widget class="QPushButton" name="btnDelete">
    <property name="geometry">
     <rect>
-     <x>970</x>
+     <x>950</x>
      <y>20</y>
      <width>60</width>
      <height>51</height>
@@ -44,10 +44,10 @@
     <string>删除</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnOpen">
+  <widget class="QPushButton" name="btnDownloadAgain">
    <property name="geometry">
     <rect>
-     <x>760</x>
+     <x>740</x>
      <y>20</y>
      <width>60</width>
      <height>51</height>
@@ -61,7 +61,7 @@
   <widget class="QPushButton" name="btnOpenDir">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>810</x>
      <y>20</y>
      <width>60</width>
      <height>51</height>
@@ -75,7 +75,7 @@
   <widget class="QPushButton" name="btnOpenFile">
    <property name="geometry">
     <rect>
-     <x>900</x>
+     <x>880</x>
      <y>20</y>
      <width>60</width>
      <height>51</height>

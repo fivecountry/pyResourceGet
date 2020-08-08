@@ -25,8 +25,10 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
         初始化事件
     '''
     def initEvents(self):
-        self.uiObj.btnOpen.clicked.connect(self.btnOpenClicked)
+        self.uiObj.btnDownloadAgain.clicked.connect(self.btnDownloadAgainClicked)
         self.uiObj.btnDelete.clicked.connect(self.btnDeleteClicked)
+        self.uiObj.btnOpenDir.clicked.connect(self.btnOpenDirClicked)
+        self.uiObj.btnOpenFile.clicked.connect(self.btnOpenFileClicked)
 
     '''
        返回UI定义类的实例(例如uiDefines/Ui_MainWindow.py的实例,抽象函数)
@@ -35,9 +37,9 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
         return Ui_ListItemWidget()
 
     '''
-        打开按钮
+        重新下载按钮
     '''
-    def btnOpenClicked(self, e):
+    def btnDownloadAgainClicked(self, e):
         try:
             if (self.taskInfo != None):
                 self.dWorker.addTask(self.taskInfo)
@@ -60,15 +62,33 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
                         pass
 
     '''
+        打开目录
+    '''
+    def btnOpenDirClicked(self, e):
+        try:
+            iotool.shellExecute(pathlib.Path(self.taskInfo.localPath).parent)
+        except Exception as ex:
+            pass
+
+    '''
+        打开文件
+    '''
+    def btnOpenFileClicked(self, e):
+        try:
+            iotool.shellExecute(self.taskInfo.localPath)
+        except Exception as ex:
+            pass
+    
+    '''
         添加项到列表
     '''
     def appendToList(self, listUI):
         self.listObj = listUI
         widgetObj,ui,event = WindowBuilder.buildWindow(None,self)
-        widgetObj.setFixedWidth(941)
+        widgetObj.setFixedWidth(1025)
         widgetObj.setFixedHeight(89)
         self.itemObj = QListWidgetItem()
-        self.itemObj.setSizeHint(QSize(941,89))
+        self.itemObj.setSizeHint(QSize(1025,89))
         self.itemObj.setData(0,event)
         self.listObj.addItem(self.itemObj)
         self.listObj.setItemWidget(self.itemObj,widgetObj)
