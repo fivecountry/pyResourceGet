@@ -21,6 +21,7 @@ class FSpiderManageWindow(IWindowImplM):
        初始化所有数据(抽象函数)
     '''
     def initUIAndData(self):
+        self.windowObj.setFixedSize(812, 499)
         self.initEvents()
         self.initPluginData()
         self.clearData()

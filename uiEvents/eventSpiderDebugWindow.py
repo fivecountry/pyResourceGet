@@ -74,6 +74,7 @@ class FSpiderDebugWindow(IWindowImplM):
        初始化所有数据(抽象函数)
     '''
     def initUIAndData(self):
+        self.windowObj.setFixedSize(893, 600)
         self.initEvents()
         self.msgWorker = QTInvokeQueueWorkerWithProcess(self)
         self.msgWorker.start()
