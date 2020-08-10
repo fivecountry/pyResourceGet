@@ -125,6 +125,7 @@ class spidertool:
         print('Spider脚本：{0}\n'.format(jsSpider.resolveCode))
         
         def spiderStart():
+            #启动Spider
             try:
                 process = CrawlerProcess()
                 process.crawl(jsSpider)
@@ -132,6 +133,12 @@ class spidertool:
                 print('jsSpider已完成!')
             except Exception as e:
                 print(e)
+            #完成事件
+            try:
+                if spidertool.logger != None:
+                    spidertool.logger.reportFinish()
+            except Exception as ex:
+                print(ex)
         
         #运行蜘蛛程序
         return Process(target=spiderStart)
@@ -192,16 +199,6 @@ class spidertool:
         try:
             if spidertool.logger != None:
                 spidertool.logger.reportDownloadUrl(url)
-        except Exception as ex:
-            print(ex)
-
-    '''
-        报告下载完成
-    '''
-    def reportFinish():
-        try:
-            if spidertool.logger != None:
-                spidertool.logger.reportFinish()
         except Exception as ex:
             print(ex)
 
