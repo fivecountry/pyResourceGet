@@ -110,13 +110,16 @@ class FSpiderDebugWindow(IWindowImplM):
         InvokeUI的实现(用于跨线程操作UI内容)
     '''
     def runUIImpl(self, uiArgs):
-        self.uiObj.btnTest.setEnabled(True)
-        self.displayLog(uiArgs.content)
+        if uiArgs.command == None:
+            self.displayLog(uiArgs.content)
+        else:
+            self.uiObj.btnTest.setEnabled(True)
 
     '''
         按钮测试
     '''
     def btnTestClicked(self, e):
+        self.uiObj.btnTest.setEnabled(False)
         self.uiObj.txtLogs.setText('')
         self.displayLog('正在准备数据...')
         TestSpider.windowObj = self
@@ -129,9 +132,11 @@ class FSpiderDebugWindow(IWindowImplM):
                 process.crawl(TestSpider)
                 TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, '数据抓取测试开始...', None))
                 process.start()
-                print('testSpider已启动!')                
+                print('testSpider已完成!')                
             except Exception as e:
                 TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, str(e), None))
+            TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs('finish', None, None))
+            TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, '数据抓取完成！', None))
         
         #运行蜘蛛程序
         p = Process(target=spiderStart)
@@ -160,6 +165,5 @@ class TestSpider(scrapy.Spider):
             result = response.xpath(TestSpider.xpathText).extract()
             for s in result:
                 TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, s, None))
-            TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, '数据抓取完成！', None))
         except Exception as ex:
             TestSpider.windowObj.msgWorker.addMsg(QTCommandInvokeArgs(None, str(ex), None))

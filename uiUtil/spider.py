@@ -129,7 +129,7 @@ class spidertool:
                 process = CrawlerProcess()
                 process.crawl(jsSpider)
                 process.start()
-                print('jsSpider已启动!')
+                print('jsSpider已完成!')
             except Exception as e:
                 print(e)
         
