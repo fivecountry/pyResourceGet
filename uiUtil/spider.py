@@ -160,8 +160,9 @@ class spidertool:
         不需要下一页
     '''
     def noPage():
-        data={'type': 'nopage', 'parse': 'none', 'urls': []}
-        return json.dumps(data, indent=4)
+        requestInfo = RequestInfo()
+        requestInfo.putUrl('noPage', 'main', [])
+        return requestInfo.toJsonString()
 
     '''
         初始化日志接口
