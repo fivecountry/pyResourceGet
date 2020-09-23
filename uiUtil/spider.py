@@ -94,10 +94,9 @@ class jsSpider(scrapy.Spider):
         try:
             if jsSpider.resolveCode != None:
                 spiderRun = js2py.eval_js(jsSpider.resolveCode)
-                nextPageJsons = json.loads(spiderRun(self.currentParseName, response))
-                print(nextPageJsons)
-                if nextPageJsons != None:
-                    for item in nextPageJsons:
+                requestInfo = spiderRun(self.currentParseName, response)
+                if requestInfo != None:
+                    for item in requestInfo.urls:
                         nextType = item.get('requestType')
                         nextParseName = item.get('parseName')
                         nextUrls = item.get('urls')                        
@@ -153,8 +152,11 @@ class spidertool:
     '''
         使用scrapy.Request或scrapy.Follow方式()
     '''
-    def requestPage(requestInfo):
-        return requestInfo.toJsonString()
+    def requestPage(rii):
+        requestInfo = RequestInfo()
+        for item in rii.urls:
+            requestInfo.putUrl(item['requestType'], item['parseName'], item['urls'])        
+        return requestInfo
 
     '''
         不需要下一页
@@ -162,7 +164,7 @@ class spidertool:
     def noPage():
         requestInfo = RequestInfo()
         requestInfo.putUrl('noPage', 'main', [])
-        return requestInfo.toJsonString()
+        return requestInfo
 
     '''
         初始化日志接口
@@ -224,4 +226,5 @@ class RequestInfo:
         self.urls.append({'requestType': requestType, 'parseName': parseName, 'urls': parseUrls})
 
     def toJsonString(self):
-        return json.dumps(self.urls, indent=4)
+        dataAll = {'urlData': self.urls}
+        return json.dumps(dataAll, indent=4)
