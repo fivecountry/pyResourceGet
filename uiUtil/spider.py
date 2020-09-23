@@ -96,17 +96,18 @@ class jsSpider(scrapy.Spider):
                 spiderRun = js2py.eval_js(jsSpider.resolveCode)
                 nextPageJsons = json.loads(spiderRun(self.currentParseName, response))
                 print(nextPageJsons)
-                if nextPageJsons.get('type') != None:
-                    nextType = nextPageJsons['type']
-                    nextParseName = nextPageJsons['parse']
-                    nextPageUrls = nextPageJsons['urls']
-                    for url in nextPageUrls:
-                        if nextType == 'request':
-                            self.currentParseName = nextParseName
-                            yield scrapy.Request(url, callback=self.parse)
-                        elif nextType == 'follow':
-                            self.currentParseName = nextParseName
-                            yield response.follow(url, callback=self.parse)
+                if nextPageJsons != None:
+                    for item in nextPageJsons:
+                        nextType = item.get('requestType')
+                        nextParseName = item.get('parseName')
+                        nextUrls = item.get('urls')                        
+                        for url in nextUrls:
+                            if nextType == 'request':
+                                self.currentParseName = nextParseName
+                                yield scrapy.Request(url, callback=self.parse)
+                            elif nextType == 'follow':
+                                self.currentParseName = nextParseName
+                                yield response.follow(url, callback=self.parse)
         except Exception as ex:
             print(ex)
 
@@ -150,24 +151,10 @@ class spidertool:
         return response.xpath(xpathString).extract()
 
     '''
-        使用scrapy.Request方式()
+        使用scrapy.Request或scrapy.Follow方式()
     '''
-    def requestPage(pName, urls):
-        urlTT = []
-        for u in urls:
-            urlTT.append(u)
-        data={'type': 'request', 'parse': pName, 'urls': urlTT}
-        return json.dumps(data, indent=4)
-
-    '''
-        使用response.follow方式()
-    '''
-    def followPage(pName, urls):
-        urlTT = []
-        for u in urls:
-            urlTT.append(u)
-        data={'type': 'follow', 'parse': pName, 'urls': urlTT}
-        return json.dumps(data, indent=4)
+    def requestPage(requestInfo):
+        return requestInfo.toJsonString()
 
     '''
         不需要下一页
@@ -223,3 +210,17 @@ class ILogDisplay:
     '''
     def reportFinish(self):
         raise NotImplementedError
+
+'''
+    请求信息
+'''
+class RequestInfo:
+    def __init__(self):
+        super().__init__()
+        self.urls = []
+
+    def putUrl(self, requestType, parseName, parseUrls):
+        self.urls.append({'requestType': requestType, 'parseName': parseName, 'urls': parseUrls})
+
+    def toJsonString(self):
+        return json.dumps(self.urls, indent=4)
