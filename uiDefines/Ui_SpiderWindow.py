@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/flyss/myData/myCode/pythonWorkSpace/pyDownloader/pyResourceGet/uiDefines/SpiderWindow.ui'
+# Form implementation generated from reading ui file '/home/flywcs/myData/myCode/pyResourceGets/pyResourceGet/uiDefines/SpiderWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_SpiderWindow(object):
     def setupUi(self, SpiderWindow):
@@ -36,8 +38,13 @@ class Ui_SpiderWindow(object):
         self.btnClose.setGeometry(QtCore.QRect(840, 30, 70, 41))
         self.btnClose.setObjectName("btnClose")
         self.txtLogs = QtWidgets.QTextEdit(self.centralwidget)
-        self.txtLogs.setGeometry(QtCore.QRect(10, 100, 921, 541))
+        self.txtLogs.setGeometry(QtCore.QRect(10, 100, 921, 501))
         self.txtLogs.setObjectName("txtLogs")
+        self.lblStatus = QtWidgets.QLabel(self.centralwidget)
+        self.lblStatus.setGeometry(QtCore.QRect(10, 610, 921, 31))
+        self.lblStatus.setStyleSheet("border:1px solid black;")
+        self.lblStatus.setText("")
+        self.lblStatus.setObjectName("lblStatus")
         SpiderWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(SpiderWindow)
@@ -52,4 +59,3 @@ class Ui_SpiderWindow(object):
         self.btnStop.setText(_translate("SpiderWindow", "停止"))
         self.btnDownloadAll.setText(_translate("SpiderWindow", "下载所有"))
         self.btnClose.setText(_translate("SpiderWindow", "关闭"))
-

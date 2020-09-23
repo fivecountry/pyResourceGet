@@ -83,8 +83,10 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
                 else:
                     for s in uiArgs.content:
                         self.downloadList.append(s)
+                self.uiObj.lblStatus.setText('总共找到' + str(len(self.downloadList)) + '个链接!')
             else:
-                self.btnStopClicked(None)
+                pass
+                #self.btnStopClicked(None)
         except Exception as ex:
             print(ex)
 
