@@ -14,6 +14,7 @@ import datetime
 import time
 from uiUtil.envs import *
 from uiUtil.globaltool import *
+from w3lib.url import safe_url_string
 
 '''
     这是SpiderWindow窗体的实现类
@@ -185,10 +186,12 @@ class SpiderSplashProcess(ISplashDoWork):
             percent = int((k / len(self.downloadList)) * 100)
             #取远程URL
             urll = self.downloadList[k]
+            #经过编码的安全Url
+            safeUrl = safe_url_string(urll, encoding="utf8")
             #生成本地保存位置
             localPath = os.path.join(self.parentWindow.downloadCurrentDir, os.path.basename(urll))
             #添加下载
-            self.mainWIndow.msgWorker.addMsg(QTCommandInvokeArgs('download', urll, localPath))
+            self.mainWIndow.msgWorker.addMsg(QTCommandInvokeArgs('download', safeUrl, localPath))
             #打印日志
             print('url:{0},local:{1}'.format(urll,localPath))
             #显示进度为XX,内容为XX
