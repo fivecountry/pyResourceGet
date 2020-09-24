@@ -59,6 +59,7 @@ import scrapy.core.downloader.contextfactory
 import twisted
 import twisted.internet
 import scrapy.crawler
+import queue
 
 '''
     使用JS代码实现蜘蛛程序
@@ -71,6 +72,7 @@ class jsSpider(scrapy.Spider):
         super().__init__(name=name, **kwargs)
         #初始化解析器名称
         self.currentParseName = 'main'
+        self.queueObj = queue.Queue()
         #初始化地址
         try:
             self.initStartUrls()
@@ -93,22 +95,36 @@ class jsSpider(scrapy.Spider):
     def parse(self, response):
         try:
             if jsSpider.resolveCode != None:
+                #运行JS解析代码
                 spiderRun = js2py.eval_js(jsSpider.resolveCode)
                 requestInfo = spiderRun(self.currentParseName, response)
+                #解析数据并加入队列
                 if requestInfo != None:
                     for item in requestInfo.urls:
                         nextType = item.get('requestType')
                         nextParseName = item.get('parseName')
-                        nextUrls = item.get('urls')                        
+                        nextUrls = item.get('urls')
                         for url in nextUrls:
-                            if nextType == 'request':
-                                self.currentParseName = nextParseName
-                                yield scrapy.Request(url, callback=self.parse)
-                            elif nextType == 'follow':
-                                self.currentParseName = nextParseName
-                                yield response.follow(url, callback=self.parse)
+                            self.queueObj.put_nowait({'request': nextType, 'parse': nextParseName, 'url': url})
+                        print('队列数量:' + str(self.queueObj.qsize()))
         except Exception as ex:
             print(ex)
+        #从队列取数据
+        try:
+            nextObj = self.queueObj.get_nowait()
+            print(nextObj)
+            if nextObj != None:
+                nextType = nextObj.get('request')
+                nextParseName = nextObj.get('parse')
+                nextUrl = nextObj.get('url')
+                if nextType == 'request':
+                    self.currentParseName = nextParseName
+                    yield scrapy.Request(nextUrl, callback=self.parse)
+                elif nextType == 'follow':
+                    self.currentParseName = nextParseName
+                    yield response.follow(nextUrl, callback=self.parse)
+        except Exception as exx:
+            print(exx)
 
 '''
     蜘蛛工具
