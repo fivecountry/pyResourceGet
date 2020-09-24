@@ -42,6 +42,7 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
     def btnDownloadAgainClicked(self, e):
         try:
             if (self.taskInfo != None):
+                self.taskInfo.error = ''
                 self.dWorker.addTask(self.taskInfo)
         except Exception as ex:
             pass
