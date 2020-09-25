@@ -108,7 +108,7 @@ class jsSpider(scrapy.Spider):
                             self.queueObj.put_nowait({'request': nextType, 'parse': nextParseName, 'url': url})
                         print('队列数量:' + str(self.queueObj.qsize()))
         except Exception as ex:
-            print(ex)
+            print(str(ex))
         #从队列取数据
         try:
             nextObj = self.queueObj.get_nowait()
@@ -119,12 +119,13 @@ class jsSpider(scrapy.Spider):
                 nextUrl = nextObj.get('url')
                 if nextType == 'request':
                     self.currentParseName = nextParseName
-                    yield scrapy.Request(nextUrl, callback=self.parse)
+                    yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
                 elif nextType == 'follow':
                     self.currentParseName = nextParseName
-                    yield response.follow(nextUrl, callback=self.parse)
+                    yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
         except Exception as exx:
-            print(exx)
+            print(str(exx))
+            spidertool.printLog('对不起，出错了！输出:' + str(exx))
 
 '''
     蜘蛛工具
