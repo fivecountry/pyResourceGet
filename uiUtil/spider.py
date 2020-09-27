@@ -73,6 +73,7 @@ class jsSpider(scrapy.Spider):
         #初始化解析器名称
         self.currentParseName = 'main'
         self.queueObj = queue.Queue()
+        self.filteUrlList = []
         #初始化地址
         try:
             self.initStartUrls()
@@ -117,12 +118,16 @@ class jsSpider(scrapy.Spider):
                 nextType = nextObj.get('request')
                 nextParseName = nextObj.get('parse')
                 nextUrl = nextObj.get('url')
-                if nextType == 'request':
-                    self.currentParseName = nextParseName
-                    yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
-                elif nextType == 'follow':
-                    self.currentParseName = nextParseName
-                    yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
+                if self.filteUrlList.__contains__(nextUrl) == True:
+                    pass
+                else:
+                    self.filteUrlList.append(nextUrl)
+                    if nextType == 'request':
+                        self.currentParseName = nextParseName
+                        yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
+                    elif nextType == 'follow':
+                        self.currentParseName = nextParseName
+                        yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
         except Exception as exx:
             print(str(exx))
             spidertool.printLog('对不起，出错了！输出:' + str(exx))
