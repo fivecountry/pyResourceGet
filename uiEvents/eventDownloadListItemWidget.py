@@ -43,6 +43,8 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
         try:
             if (self.taskInfo != None):
                 self.taskInfo.error = ''
+                self.taskInfo.percent = None
+                self.taskInfo.isFinished = False
                 self.dWorker.addTask(self.taskInfo)
         except Exception as ex:
             pass
@@ -85,14 +87,14 @@ class FDownloadListItemWidget(IWindowImplW, IDownloadReporter):
     '''
     def appendToList(self, listUI):
         self.listObj = listUI
-        widgetObj,ui,event = WindowBuilder.buildWindow(None,self)
+        widgetObj, ui, event = WindowBuilder.buildWindow(None, self)
         widgetObj.setFixedWidth(1025)
         widgetObj.setFixedHeight(89)
         self.itemObj = QListWidgetItem()
-        self.itemObj.setSizeHint(QSize(1025,89))
-        self.itemObj.setData(0,event)
+        self.itemObj.setSizeHint(QSize(1025, 89))
+        self.itemObj.setData(0, event)
         self.listObj.addItem(self.itemObj)
-        self.listObj.setItemWidget(self.itemObj,widgetObj)
+        self.listObj.setItemWidget(self.itemObj, widgetObj)
 
     '''
         设置文本

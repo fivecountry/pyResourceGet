@@ -65,6 +65,7 @@ class FMainWindow(IWindowImplM):
         self.uiObj.btnDownloadDir.clicked.connect(self.btnDownloadDirClicked)
         self.uiObj.btnPluginDir.clicked.connect(self.btnPluginDirClicked)
         self.uiObj.btnXPathDebug.clicked.connect(self.btnXPathDebugClicked)
+        self.uiObj.btnClearFinished.clicked.connect(self.btnClearFinishedClicked)
 
     '''
        返回UI定义类的实例(例如uiDefines/Ui_MainWindow.py的实例,抽象函数)
@@ -104,7 +105,7 @@ class FMainWindow(IWindowImplM):
             item = FDownloadListItemWidget()
             item.dWorker = self.dWorker
             item.appendToList(self.uiObj.lwFileList)
-            taskInfo = DownloadTaskInfo(url,local,item)
+            taskInfo = DownloadTaskInfo(url, local, item)
             taskInfo.isFinished = isFinished
             item.setText(item.getDisplayText())            
             if (taskInfo.isFinished == False):
@@ -122,7 +123,7 @@ class FMainWindow(IWindowImplM):
                 remoteUrl = kv['url']
                 localPath = kv['local']
                 isFinished = kv['finished']
-                self.addDownloadTask(remoteUrl,localPath,isFinished)
+                self.addDownloadTask(remoteUrl, localPath, isFinished)
 
     '''
         载入插件列表
@@ -143,6 +144,26 @@ class FMainWindow(IWindowImplM):
         self.dWorker.isRunning = False
         self.saveDownloadList()
         e.accept()
+
+    '''
+        清除已完成
+    '''
+    def btnClearFinishedClicked(self, e):
+        #删除已完成
+        try:
+            tempList = []
+            for k in range(self.uiObj.lwFileList.count()):
+                item = self.uiObj.lwFileList.item(k)
+                taskInfo = item.data(0).taskInfo
+                if taskInfo != None:
+                    if taskInfo.isFinished == True and os.path.exists(taskInfo.localPath):
+                        tempList.append(item)
+            for itemObj in tempList:
+                self.uiObj.lwFileList.takeItem(self.uiObj.lwFileList.row(itemObj))
+        except Exception as ex:
+            print(str(ex))
+        #保存列表
+        self.saveDownloadList()
 
     '''
         管理
