@@ -250,3 +250,12 @@ class RequestInfo:
     def toJsonString(self):
         dataAll = {'urlData': self.urls}
         return json.dumps(dataAll, indent=4)
+
+'''
+    下载项
+'''
+class SpiderDownloadItem(object):
+    def __init__(self, rUrl, rSort, rFName):
+        self.remoteUrl = rUrl
+        self.destDirName = rSort
+        self.destFileName = rFName

@@ -79,7 +79,7 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
             if (uiArgs.command == 'log'):
                 self.displayLog(uiArgs.content)
             elif (uiArgs.command == 'download'):
-                if isinstance(uiArgs.content,str):
+                if isinstance(uiArgs.content, SpiderDownloadItem):
                     self.downloadList.append(uiArgs.content)
                 else:
                     for s in uiArgs.content:
@@ -100,15 +100,8 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
     '''
         报告下载地址
     '''
-    def reportDownloadUrl(self, url):
-        reportObj = None
-        if isinstance(url, str):
-            reportObj = url
-        else:
-            reportObj = []
-            for s in url:
-                reportObj.append(s)
-        self.msgWorker.addMsg(QTCommandInvokeArgs('download',reportObj,None))
+    def reportDownloadUrl(self, objOrList):
+        self.msgWorker.addMsg(QTCommandInvokeArgs('download', objOrList, None))
 
     '''
         报告下载完成
@@ -182,21 +175,25 @@ class SpiderSplashProcess(ISplashDoWork):
 
     def process(self):
         for k in range(0, len(self.downloadList)):
-            #生成百分数
-            percent = int((k / len(self.downloadList)) * 100)
-            #取远程URL
-            urll = self.downloadList[k]
-            #经过编码的安全Url
-            safeUrl = safe_url_string(urll, encoding="utf8")
-            #生成本地保存位置
-            localPath = os.path.join(self.parentWindow.downloadCurrentDir, os.path.basename(urll))
-            #添加下载
-            self.mainWIndow.msgWorker.addMsg(QTCommandInvokeArgs('download', safeUrl, localPath))
-            #打印日志
-            print('url:{0},local:{1}'.format(urll,localPath))
-            #显示进度为XX,内容为XX
-            self.eventObj.msgWorker.addMsg(SplashInvokeArgs(percent, '正在添加任务:{0}'.format(urll)))
-            time.sleep(0.05)        
+            try:
+                #生成百分数
+                percent = int((k / len(self.downloadList)) * 100)
+                #取远程URL
+                dObj = self.downloadList[k]
+                #经过编码的安全Url
+                safeUrl = safe_url_string(dObj.remoteUrl, encoding="utf8")
+                #生成本地保存位置
+                localPath = os.path.join(self.parentWindow.downloadCurrentDir, dObj.destDirName, dObj.destFileName)
+                os.makedirs(os.path.join(self.parentWindow.downloadCurrentDir, dObj.destDirName))
+                #添加下载
+                self.mainWIndow.msgWorker.addMsg(QTCommandInvokeArgs('download', safeUrl, localPath))
+                #打印日志
+                print('url:{0},local:{1}'.format(dObj.remoteUrl, localPath))
+                #显示进度为XX,内容为XX
+                self.eventObj.msgWorker.addMsg(SplashInvokeArgs(percent, '正在添加任务:{0}'.format(dObj.remoteUrl)))
+                time.sleep(0.05)
+            except Exception as ex:
+                print(str(ex))
         #关闭窗体
         self.windowObj.close()
         self.parentWindow.windowObj.close()
