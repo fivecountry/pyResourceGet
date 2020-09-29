@@ -79,17 +79,17 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
             if (uiArgs.command == 'log'):
                 self.displayLog(uiArgs.content)
             elif (uiArgs.command == 'download'):
-                if isinstance(uiArgs.content, SpiderDownloadItem):
-                    self.downloadList.append(uiArgs.content)
+                if isinstance(uiArgs.tag, SpiderDownloadItem):
+                    self.downloadList.append(uiArgs.tag)
                 else:
-                    for s in uiArgs.content:
+                    for s in uiArgs.tag:
                         self.downloadList.append(s)
                 self.uiObj.lblStatus.setText('总共找到' + str(len(self.downloadList)) + '个链接!')
             else:
                 pass
                 #self.btnStopClicked(None)
         except Exception as ex:
-            print(ex)
+            print(str(ex))
 
     '''
         显示日志
@@ -101,7 +101,14 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
         报告下载地址
     '''
     def reportDownloadUrl(self, objOrList):
-        self.msgWorker.addMsg(QTCommandInvokeArgs('download', objOrList, None))
+        reportObj = None
+        if isinstance(objOrList, SpiderDownloadItem):
+            reportObj = objOrList
+        else:
+            reportObj = []
+            for s in objOrList:
+                reportObj.append(s)
+        self.msgWorker.addMsg(QTCommandInvokeArgs('download', '', reportObj))
 
     '''
         报告下载完成
@@ -184,7 +191,10 @@ class SpiderSplashProcess(ISplashDoWork):
                 safeUrl = safe_url_string(dObj.remoteUrl, encoding="utf8")
                 #生成本地保存位置
                 localPath = os.path.join(self.parentWindow.downloadCurrentDir, dObj.destDirName, dObj.destFileName)
-                os.makedirs(os.path.join(self.parentWindow.downloadCurrentDir, dObj.destDirName))
+                try:
+                    os.makedirs(os.path.join(self.parentWindow.downloadCurrentDir, dObj.destDirName))
+                except Exception as exxx:
+                    pass
                 #添加下载
                 self.mainWIndow.msgWorker.addMsg(QTCommandInvokeArgs('download', safeUrl, localPath))
                 #打印日志

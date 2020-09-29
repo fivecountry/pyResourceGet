@@ -156,7 +156,7 @@ class FMainWindow(IWindowImplM):
                 item = self.uiObj.lwFileList.item(k)
                 taskInfo = item.data(0).taskInfo
                 if taskInfo != None:
-                    if taskInfo.isFinished == True and os.path.exists(taskInfo.localPath):
+                    if taskInfo.isFinished == True:
                         tempList.append(item)
             for itemObj in tempList:
                 self.uiObj.lwFileList.takeItem(self.uiObj.lwFileList.row(itemObj))

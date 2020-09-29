@@ -256,6 +256,8 @@ class RequestInfo:
 '''
 class SpiderDownloadItem(object):
     def __init__(self, rUrl, rSort, rFName):
+        super().__init__()
+        #init
         self.remoteUrl = rUrl
         self.destDirName = rSort
         self.destFileName = rFName
