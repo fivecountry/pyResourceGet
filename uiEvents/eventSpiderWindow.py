@@ -86,7 +86,7 @@ class FSpiderWindow(IWindowImplM, ILogDisplay):
                         self.downloadList.append(s)
                 self.uiObj.lblStatus.setText('总共找到' + str(len(self.downloadList)) + '个链接!')
             else:
-                pass
+                self.printLog('扫描完成！')
                 #self.btnStopClicked(None)
         except Exception as ex:
             print(str(ex))

@@ -112,6 +112,7 @@ class jsSpider(scrapy.Spider):
                                     continue
                                 else:
                                     self.filteUrlList.append(url)
+                                    print(':::' + url)
                                     self.queueObj.put_nowait({'request': nextType, 'parse': nextParseName, 'url': url})
                             print('队列数量:' + str(self.queueObj.qsize()))
             except Exception as ex:
@@ -119,22 +120,25 @@ class jsSpider(scrapy.Spider):
         #从队列中取解析数据，然后进行分析
         try:
             #取对象
-            nextObj = self.queueObj.get_nowait()
-            print(nextObj)
-            if nextObj != None:
-                #取数据,请求类型
-                nextType = nextObj.get('request')
-                #取数据,模块名称
-                nextParseName = nextObj.get('parse')
-                #取数据,源地址
-                nextUrl = nextObj.get('url')
-                #解析数据
-                if nextType == 'request':
-                    self.currentParseName = nextParseName
-                    yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
-                elif nextType == 'follow':
-                    self.currentParseName = nextParseName
-                    yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
+            if self.queueObj.empty() == True:
+                pass
+            else:
+                nextObj = self.queueObj.get_nowait()
+                print(nextObj)
+                if nextObj != None:
+                    #取数据,请求类型
+                    nextType = nextObj.get('request')
+                    #取数据,模块名称
+                    nextParseName = nextObj.get('parse')
+                    #取数据,源地址
+                    nextUrl = nextObj.get('url')
+                    #解析数据
+                    if nextType == 'request':
+                        self.currentParseName = nextParseName
+                        yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
+                    elif nextType == 'follow':
+                        self.currentParseName = nextParseName
+                        yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
         except Exception as exx:
             print(str(exx))
             spidertool.printLog('对不起，出错了！输出:' + str(exx))
@@ -251,7 +255,12 @@ class RequestInfo:
         super().__init__()
         self.urls = []
 
-    def putUrl(self, requestType, parseName, parseUrls):
+    def putUrl(self, requestType, parseName, oneOrMore):
+        parseUrls = []
+        if isinstance(oneOrMore, str):
+            parseUrls.append(oneOrMore)
+        else:
+            parseUrls = oneOrMore
         self.urls.append({'requestType': requestType, 'parseName': parseName, 'urls': parseUrls})
 
     def toJsonString(self):
