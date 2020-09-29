@@ -94,40 +94,47 @@ class jsSpider(scrapy.Spider):
         使用JS代码进行解析
     '''
     def parse(self, response):
+        #先解析脚本返回数据，看看是否存在需要进一步解析的数据
+        if response != None:
+            try:
+                if jsSpider.resolveCode != None:
+                    #运行JS解析代码
+                    spiderRun = js2py.eval_js(jsSpider.resolveCode)
+                    requestInfo = spiderRun(self.currentParseName, response)
+                    #解析数据并加入队列
+                    if requestInfo != None:
+                        for item in requestInfo.urls:
+                            nextType = item.get('requestType')
+                            nextParseName = item.get('parseName')
+                            nextUrls = item.get('urls')
+                            for url in nextUrls:
+                                if self.filteUrlList.__contains__(url) == True:
+                                    continue
+                                else:
+                                    self.filteUrlList.append(url)
+                                    self.queueObj.put_nowait({'request': nextType, 'parse': nextParseName, 'url': url})
+                            print('队列数量:' + str(self.queueObj.qsize()))
+            except Exception as ex:
+                print(str(ex))
+        #从队列中取解析数据，然后进行分析
         try:
-            if jsSpider.resolveCode != None:
-                #运行JS解析代码
-                spiderRun = js2py.eval_js(jsSpider.resolveCode)
-                requestInfo = spiderRun(self.currentParseName, response)
-                #解析数据并加入队列
-                if requestInfo != None:
-                    for item in requestInfo.urls:
-                        nextType = item.get('requestType')
-                        nextParseName = item.get('parseName')
-                        nextUrls = item.get('urls')
-                        for url in nextUrls:
-                            self.queueObj.put_nowait({'request': nextType, 'parse': nextParseName, 'url': url})
-                        print('队列数量:' + str(self.queueObj.qsize()))
-        except Exception as ex:
-            print(str(ex))
-        #从队列取数据
-        try:
+            #取对象
             nextObj = self.queueObj.get_nowait()
             print(nextObj)
             if nextObj != None:
+                #取数据,请求类型
                 nextType = nextObj.get('request')
+                #取数据,模块名称
                 nextParseName = nextObj.get('parse')
+                #取数据,源地址
                 nextUrl = nextObj.get('url')
-                if self.filteUrlList.__contains__(nextUrl) == True:
-                    pass
-                else:
-                    self.filteUrlList.append(nextUrl)
-                    if nextType == 'request':
-                        self.currentParseName = nextParseName
-                        yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
-                    elif nextType == 'follow':
-                        self.currentParseName = nextParseName
-                        yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
+                #解析数据
+                if nextType == 'request':
+                    self.currentParseName = nextParseName
+                    yield scrapy.Request(nextUrl, callback=self.parse, dont_filter=True)
+                elif nextType == 'follow':
+                    self.currentParseName = nextParseName
+                    yield response.follow(nextUrl, callback=self.parse, dont_filter=True)
         except Exception as exx:
             print(str(exx))
             spidertool.printLog('对不起，出错了！输出:' + str(exx))
